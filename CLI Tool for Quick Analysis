@@ -1,0 +1,19 @@
+# tools/analyze.py
+cat > tools/analyze.py <<'EOF'
+import sys
+from backend.phrase_detector import flag_text
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python analyze.py '<text>'")
+        return
+    text = sys.argv[1]
+    flagged = flag_text(text)
+    if flagged:
+        print("⚠️ Suspicious phrases found:", ", ".join(flagged))
+    else:
+        print("✅ No suspicious phrases detected.")
+
+if __name__ == "__main__":
+    main()
+EOF
