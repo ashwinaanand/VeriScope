@@ -1,0 +1,16 @@
+# backend/phrase_detector.py
+cat > backend/phrase_detector.py <<'EOF'
+SUSPICIOUS_PHRASES = [
+    "miracle cure",
+    "guaranteed results",
+    "exclusive deal",
+    "limited time only"
+]
+
+def flag_text(text: str):
+    flagged = []
+    for phrase in SUSPICIOUS_PHRASES:
+        if phrase.lower() in text.lower():
+            flagged.append(phrase)
+    return flagged
+EOF
