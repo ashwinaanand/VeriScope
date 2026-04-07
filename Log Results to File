@@ -1,0 +1,31 @@
+# tools/analyze.py (update)
+cat > tools/analyze.py <<'EOF'
+import sys
+import datetime
+from backend.phrase_detector import flag_text
+
+LOG_FILE = "analysis_log.txt"
+
+def log_result(text, flagged):
+    with open(LOG_FILE, "a") as f:
+        timestamp = datetime.datetime.now().isoformat()
+        f.write(f"{timestamp} | {text} | {','.join(flagged) if flagged else 'None'}\n")
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python analyze.py '<text>'")
+        return
+    text = sys.argv[1]
+    flagged = flag_text(text)
+    if flagged:
+        print("⚠️ Suspicious phrases found:", ", ".join(flagged))
+    else:
+        print("✅ No suspicious phrases detected.")
+    log_result(text, flagged)
+
+if __name__ == "__main__":
+    main()
+EOF
+
+git add tools/analyze.py
+git commit -m "feat: add logging of analysis results"
