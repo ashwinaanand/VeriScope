@@ -1,0 +1,31 @@
+# backend/phrase_config.json
+cat > backend/phrase_config.json <<'EOF'
+{
+  "phrases": [
+    "miracle cure",
+    "guaranteed results",
+    "exclusive deal",
+    "limited time only",
+    "click here now",
+    "too good to be true"
+  ]
+}
+EOF
+
+# backend/phrase_detector.py (update)
+cat > backend/phrase_detector.py <<'EOF'
+import json
+
+def load_phrases():
+    with open("backend/phrase_config.json") as f:
+        data = json.load(f)
+    return data["phrases"]
+
+def flag_text(text: str):
+    phrases = load_phrases()
+    flagged = [p for p in phrases if p.lower() in text.lower()]
+    return flagged
+EOF
+
+git add backend/phrase_config.json backend/phrase_detector.py
+git commit -m "feat: load suspicious phrases from external JSON file"
