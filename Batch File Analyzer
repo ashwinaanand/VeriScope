@@ -1,0 +1,28 @@
+# tools/batch_analyze.py
+cat > tools/batch_analyze.py <<'EOF'
+import os
+from backend.phrase_detector import flag_text
+
+INPUT_DIR = "samples"
+OUTPUT_FILE = "batch_results.txt"
+
+def analyze_files():
+    results = []
+    for fname in os.listdir(INPUT_DIR):
+        if fname.endswith(".txt"):
+            path = os.path.join(INPUT_DIR, fname)
+            with open(path) as f:
+                text = f.read()
+            flagged = flag_text(text)
+            results.append((fname, flagged))
+    with open(OUTPUT_FILE, "w") as out:
+        for fname, flagged in results:
+            out.write(f"{fname}: {','.join(flagged) if flagged else 'None'}\n")
+
+if __name__ == "__main__":
+    analyze_files()
+    print(f" Batch analysis complete. Results saved to {OUTPUT_FILE}")
+EOF
+
+git add tools/batch_analyze.py
+git commit -m "feat: add batch analyzer for multiple text files"
