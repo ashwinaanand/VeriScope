@@ -1,0 +1,39 @@
+# backend/web_app.py
+cat > backend/web_app.py <<'EOF'
+from flask import Flask, request, render_template_string
+from backend.phrase_detector import flag_text
+
+app = Flask(__name__)
+
+TEMPLATE = """
+<!doctype html>
+<title>VeriScope Analyzer</title>
+<h1>Enter text to analyze</h1>
+<form method=post>
+  <textarea name=text rows=6 cols=60></textarea><br>
+  <input type=submit value=Analyze>
+</form>
+{% if flagged is not none %}
+  <h2>Results:</h2>
+  {% if flagged %}
+    <p>⚠️ Suspicious phrases found: {{ flagged|join(', ') }}</p>
+  {% else %}
+    <p>✅ No suspicious phrases detected.</p>
+  {% endif %}
+{% endif %}
+"""
+
+@app.route("/", methods=["GET", "POST"])
+def analyze():
+    flagged = None
+    if request.method == "POST":
+        text = request.form["text"]
+        flagged = flag_text(text)
+    return render_template_string(TEMPLATE, flagged=flagged)
+
+if __name__ == "__main__":
+    app.run(debug=True)
+EOF
+
+git add backend/web_app.py
+git commit -m "feat: add Flask web UI for text analysis"
