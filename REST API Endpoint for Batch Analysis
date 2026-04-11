@@ -1,0 +1,18 @@
+# backend/api.py (extend existing FastAPI)
+cat >> backend/api.py <<'EOF'
+
+@app.post("/batch")
+def batch_analyze(files: list[str]):
+    results = {}
+    for fname in files:
+        try:
+            with open(fname) as f:
+                text = f.read()
+            results[fname] = flag_text(text)
+        except Exception as e:
+            results[fname] = [f"Error: {e}"]
+    return results
+EOF
+
+git add backend/api.py
+git commit -m "feat: add batch analysis endpoint to API"
