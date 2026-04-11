@@ -1,0 +1,28 @@
+# tools/watch_dir.py
+cat > tools/watch_dir.py <<'EOF'
+import time, os
+from backend.phrase_detector import flag_text
+
+WATCH_DIR = "samples"
+
+def watch():
+    seen = set()
+    while True:
+        files = [f for f in os.listdir(WATCH_DIR) if f.endswith(".txt")]
+        for fname in files:
+            if fname not in seen:
+                seen.add(fname)
+                path = os.path.join(WATCH_DIR, fname)
+                with open(path) as f:
+                    text = f.read()
+                flagged = flag_text(text)
+                print(f"📄 {fname} -> {','.join(flagged) if flagged else 'None'}")
+        time.sleep(5)
+
+if __name__ == "__main__":
+    print(f"👀 Watching {WATCH_DIR} for new files...")
+    watch()
+EOF
+
+git add tools/watch_dir.py
+git commit -m "feat: add directory watcher to auto-analyze new files"
