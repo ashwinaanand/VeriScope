@@ -1,0 +1,26 @@
+# tools/report.py
+cat > tools/report.py <<'EOF'
+import datetime
+
+def generate_report(log_file="analysis_log.txt", report_file="summary_report.txt"):
+    counts = {}
+    with open(log_file) as f:
+        for line in f:
+            parts = line.strip().split("|")
+            if len(parts) >= 3:
+                flagged = parts[2].split(",")
+                for phrase in flagged:
+                    if phrase != "None":
+                        counts[phrase] = counts.get(phrase, 0) + 1
+    with open(report_file, "w") as out:
+        out.write(f"Report generated {datetime.datetime.now().isoformat()}\n")
+        for phrase, count in counts.items():
+            out.write(f"{phrase}: {count}\n")
+    print(f"✅ Summary report saved to {report_file}")
+
+if __name__ == "__main__":
+    generate_report()
+EOF
+
+git add tools/report.py
+git commit -m "feat: generate summary report of analysis results"
