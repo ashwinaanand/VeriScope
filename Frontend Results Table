@@ -1,0 +1,29 @@
+# frontend/components/ResultsTable.js
+cat > frontend/components/ResultsTable.js <<'EOF'
+import React from "react";
+
+export default function ResultsTable({ results }) {
+  if (!results) return null;
+  return (
+    <table border="1" style={{ marginTop: "20px", width: "100%" }}>
+      <thead>
+        <tr>
+          <th>File/Text</th>
+          <th>Flagged Phrases</th>
+        </tr>
+      </thead>
+      <tbody>
+        {Object.entries(results).map(([key, phrases]) => (
+          <tr key={key}>
+            <td>{key}</td>
+            <td>{phrases.length ? phrases.join(", ") : "None"}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+EOF
+
+git add frontend/components/ResultsTable.js
+git commit -m "feat: add results table to dashboard"
